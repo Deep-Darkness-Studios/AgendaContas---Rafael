@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using Windows.UI.Notifications;
 
 namespace AgendaContas.UI.Services;
 
@@ -49,9 +50,16 @@ internal static class DesktopNotificationManagerCompat
         }
     }
 
-    internal static object CreateToastNotifier(string aUMID)
+    internal static ToastNotifier? CreateToastNotifier(string aumid)
     {
-        throw new NotImplementedException();
+        try
+        {
+            return ToastNotificationManager.CreateToastNotifier(aumid);
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     [ComImport]

@@ -21,6 +21,7 @@
     <PackageReference Include="SkiaSharp" Version="3.119.0" />
     <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.119.0" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
+    <PackageReference Include="PdfSharpCore" Version="1.3.67" />
     <!-- The Windows SDK contract types are provided by targeting pack for net8.0-windows10.0.22621.0; remove explicit package to avoid duplicate WinRT assemblies -->
     <!-- <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.22621.755" /> -->
   </ItemGroup>

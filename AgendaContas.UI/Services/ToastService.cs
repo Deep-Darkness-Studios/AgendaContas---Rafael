@@ -38,7 +38,7 @@ public static class ToastService
             var toast = new ToastNotification(xml);
 
             // Show the toast using the desktop notifier
-            var notifier = DesktopNotificationManagerCompat.CreateToastNotifier(AUMID) as ToastNotifier;
+            var notifier = DesktopNotificationManagerCompat.CreateToastNotifier(AUMID);
             if (notifier != null)
             {
                 notifier.Show(toast);

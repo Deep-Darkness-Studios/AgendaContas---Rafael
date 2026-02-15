@@ -1,0 +1,39 @@
+{
+  "dotnet.defaultSolution": "AgendaContas.sln",
+  "files.exclude": {
+    "**/bin": true,
+    "**/obj": true,
+    "**/.vs": true,
+    "artifacts": true
+  },
+  "search.exclude": {
+    "**/bin": true,
+    "**/obj": true,
+    "**/.vs": true,
+    "artifacts": true
+  },
+  "files.watcherExclude": {
+    "**/bin/**": true,
+    "**/obj/**": true,
+    "**/.vs/**": true,
+    "**/artifacts/**": true
+  },
+  "cSpell.language": "en,pt-BR",
+  "cSpell.enabledLanguageIds": [
+    "csharp",
+    "xml",
+    "json",
+    "jsonc",
+    "yaml",
+    "yml",
+    "powershell",
+    "shellscript",
+    "plaintext"
+  ],
+  "cSpell.ignorePaths": [
+    "**/bin/**",
+    "**/obj/**",
+    "**/.vs/**",
+    "artifacts/**"
+  ]
+}

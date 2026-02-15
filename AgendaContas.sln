@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgendaContas.Data", "Agenda
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgendaContas.UI", "AgendaContas.UI\AgendaContas.UI.csproj", "{33333333-3333-3333-3333-333333333333}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgendaContas.Tests", "AgendaContas.Tests\AgendaContas.Tests.csproj", "{78C5EFA6-9E03-450C-B526-EF53D3AACCD7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{33333333-3333-3333-3333-333333333333}.Release|x64.Build.0 = Release|Any CPU
 		{33333333-3333-3333-3333-333333333333}.Release|x86.ActiveCfg = Release|Any CPU
 		{33333333-3333-3333-3333-333333333333}.Release|x86.Build.0 = Release|Any CPU
+		{78C5EFA6-9E03-450C-B526-EF53D3AACCD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78C5EFA6-9E03-450C-B526-EF53D3AACCD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78C5EFA6-9E03-450C-B526-EF53D3AACCD7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{78C5EFA6-9E03-450C-B526-EF53D3AACCD7}.Debug|x64.Build.0 = Debug|Any CPU
+		{78C5EFA6-9E03-450C-B526-EF53D3AACCD7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{78C5EFA6-9E03-450C-B526-EF53D3AACCD7}.Debug|x86.Build.0 = Debug|Any CPU
+		{78C5EFA6-9E03-450C-B526-EF53D3AACCD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78C5EFA6-9E03-450C-B526-EF53D3AACCD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78C5EFA6-9E03-450C-B526-EF53D3AACCD7}.Release|x64.ActiveCfg = Release|Any CPU
+		{78C5EFA6-9E03-450C-B526-EF53D3AACCD7}.Release|x64.Build.0 = Release|Any CPU
+		{78C5EFA6-9E03-450C-B526-EF53D3AACCD7}.Release|x86.ActiveCfg = Release|Any CPU
+		{78C5EFA6-9E03-450C-B526-EF53D3AACCD7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -206,7 +206,7 @@ partial class MainForm
         Icon = (Icon)resources.GetObject("$this.Icon");
         Name = "MainForm";
         StartPosition = FormStartPosition.CenterScreen;
-        Text = "Agenda Financeira Pro - Dashboard";
+        Text = "DDS - Cofre Real - Dashboard";
         pnlDash.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)dgvLancamentos).EndInit();
         pnlButtons.ResumeLayout(false);

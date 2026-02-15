@@ -2,9 +2,13 @@
   "profiles": {
     "AgendaContas.Domain": {
       "commandName": "Project",
+      "workingDirectory": "C:\\Projetos\\AgendaContas",
       "sqlDebugging": true,
       "jsWebView2Debugging": true,
       "nativeDebugging": true
+    },
+    "Perfil 1": {
+      "commandName": "Executable"
     }
   }
 }
