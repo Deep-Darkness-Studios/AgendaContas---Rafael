@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <!-- Target a Windows 10+ runtime matching the Windows SDK contract version to avoid NETSDK1135 -->
+    <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms> 
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- preserva warnings existentes e adiciona NU1701 -->
+    <NoWarn>$(NoWarn);NU1701</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Use a LiveCharts WinForms package compatible with modern .NET; if you still get NU1701
+         ensure the SkiaSharp.Views.WindowsForms version below is a netstandard/net5+ build.
+         If a transitive dependency pulls a netframework-only SkiaSharp (ex: 3.119.0), either
+         upgrade that package or pin a compatible SkiaSharp version here to override it. -->
+    <!-- Use the latest available pre-release matching LiveCharts 2.x if 2.0.0 stable is not published -->
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WinForms" Version="2.0.0-rc6.1" />
+    <!-- Align SkiaSharp packages with LiveCharts dependency to avoid downgrade errors -->
+    <PackageReference Include="SkiaSharp" Version="3.119.0" />
+    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.119.0" />
+    <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
+    <!-- The Windows SDK contract types are provided by targeting pack for net8.0-windows10.0.22621.0; remove explicit package to avoid duplicate WinRT assemblies -->
+    <!-- <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.22621.755" /> -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AgendaContas.Domain\AgendaContas.Domain.csproj" />
+    <ProjectReference Include="..\AgendaContas.Data\AgendaContas.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>
