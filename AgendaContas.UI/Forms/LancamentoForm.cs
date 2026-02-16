@@ -1,11 +1,11 @@
-using AgendaContas.Data.Repositories;
+using AgendaContas.Domain.Interfaces;
 using AgendaContas.Domain.Models;
 
 namespace AgendaContas.UI.Forms;
 
 public class LancamentoForm : Form
 {
-    private readonly AppRepository _repo;
+    private readonly IAppRepository _repo;
     private readonly Lancamento? _lancamentoAtual;
 
     private readonly ComboBox _cmbConta = new();
@@ -23,7 +23,7 @@ public class LancamentoForm : Form
 
     public Lancamento? LancamentoResult { get; private set; }
 
-    public LancamentoForm(AppRepository repo, Lancamento? lancamento = null)
+    public LancamentoForm(IAppRepository repo, Lancamento? lancamento = null)
     {
         _repo = repo;
         _lancamentoAtual = lancamento;

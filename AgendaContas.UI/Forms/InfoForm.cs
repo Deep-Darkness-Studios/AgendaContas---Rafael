@@ -1,13 +1,13 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
-using AgendaContas.Data.Repositories;
+using AgendaContas.Domain.Interfaces;
 using AgendaContas.UI.Services;
 
 namespace AgendaContas.UI.Forms;
 
 public partial class InfoForm : Form
 {
-    private readonly AppRepository? _repo;
+    private readonly IAppRepository? _repo;
     private readonly Label _lblSplash = new();
     private readonly ComboBox _cmbSplashMode = new();
     private readonly NumericUpDown _numSplashSegundos = new();
@@ -44,7 +44,7 @@ public partial class InfoForm : Form
         "- Criar software útil, consistente e sustentável,\n" +
         "- preservando identidade criativa sem abrir mão da engenharia.";
 
-    public InfoForm(AppRepository? repo = null)
+    public InfoForm(IAppRepository? repo = null)
     {
         _repo = repo;
         InitializeComponent();

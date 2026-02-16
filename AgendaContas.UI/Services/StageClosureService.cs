@@ -1,5 +1,5 @@
 using System.Text;
-using AgendaContas.Data.Repositories;
+using AgendaContas.Domain.Interfaces;
 using AgendaContas.Domain.Models;
 using AgendaContas.Domain.Services;
 
@@ -56,7 +56,7 @@ public static class StageClosureService
         "Receitas"
     };
 
-    public static async Task<StageClosureReport> ExecutarCargaInicialAsync(AppRepository repo)
+    public static async Task<StageClosureReport> ExecutarCargaInicialAsync(IAppRepository repo)
     {
         var report = new StageClosureReport();
 

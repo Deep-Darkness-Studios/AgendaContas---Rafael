@@ -53,3 +53,39 @@ public interface IParticipanteStrRepository
     Task<int> GetParticipantesStrCountAsync();
     Task<DateTime?> GetUltimaSincronizacaoParticipantesStrAsync();
 }
+
+public interface IAppRepository :
+    IContaRepository,
+    ILancamentoRepository,
+    ICategoriaRepository,
+    IUsuarioRepository,
+    IAuditoriaRepository,
+    IParticipanteStrRepository
+{
+    Task<IEnumerable<Categoria>> GetCategoriasAsync(bool apenasAtivas = true);
+    Task SoftDeleteCategoriaAsync(int id);
+
+    Task<IEnumerable<Conta>> GetContasAsync(bool apenasAtivas = true);
+    Task<IEnumerable<Conta>> GetContasComCategoriaAsync(bool apenasAtivas = true);
+    Task<Conta?> GetContaByIdAsync(int id);
+    Task SoftDeleteContaAsync(int id);
+
+    Task<Lancamento?> GetLancamentoByIdAsync(int id);
+    Task DeleteLancamentoAsync(int id);
+    Task UpdateAnexoPathAsync(int lancamentoId, string? anexoPath);
+
+    Task<bool> IsCompetenciaFechadaAsync(string competencia);
+    Task<IEnumerable<string>> GetCompetenciasFechadasAsync();
+    Task FecharCompetenciaAsync(string competencia, string? observacao = null);
+    Task ReabrirCompetenciaAsync(string competencia);
+
+    Task BackupDatabaseAsync(string destinationFilePath);
+    Task RestoreDatabaseAsync(string sourceFilePath);
+
+    Task<int> RegistrarAuditoriaAsync(
+        string acao,
+        string entidade,
+        int? entidadeId = null,
+        Usuario? usuario = null,
+        string? detalhes = null);
+}

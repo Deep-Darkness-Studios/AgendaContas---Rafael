@@ -1,4 +1,5 @@
 using AgendaContas.Data.Repositories;
+using AgendaContas.Domain.Interfaces;
 using AgendaContas.Domain.Services;
 using AgendaContas.UI.Forms;
 using AgendaContas.UI.Services;
@@ -168,6 +169,6 @@ static class Program
     }
 
     private sealed record StartupProgress(int Percent, string Message);
-    private sealed record StartupResult(AppRepository Repository, AuthService AuthService);
+    private sealed record StartupResult(IAppRepository Repository, AuthService AuthService);
     private sealed record SplashProfile(string Mode, int DurationSeconds, int FadeInDurationMs, int FadeOutDurationMs);
 }

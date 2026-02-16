@@ -1,4 +1,3 @@
-using AgendaContas.Data.Repositories;
 using AgendaContas.Domain.Interfaces;
 using AgendaContas.Domain.Models;
 
@@ -6,7 +5,7 @@ namespace AgendaContas.UI.Forms;
 
 public class CategoriaManagementForm : Form
 {
-    private readonly AppRepository _repo;
+    private readonly IAppRepository _repo;
     private readonly Usuario? _usuarioLogado;
     private readonly ICategoriaRepository _categoriaRepository;
     private readonly DataGridView _grid = new();
@@ -15,7 +14,7 @@ public class CategoriaManagementForm : Form
     private readonly Button _btnDesativar = new();
     private readonly Button _btnFechar = new();
 
-    public CategoriaManagementForm(AppRepository repo, Usuario? usuarioLogado = null)
+    public CategoriaManagementForm(IAppRepository repo, Usuario? usuarioLogado = null)
     {
         _repo = repo;
         _usuarioLogado = usuarioLogado;

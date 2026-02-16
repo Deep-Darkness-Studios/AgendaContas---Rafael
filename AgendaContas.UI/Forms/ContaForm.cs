@@ -1,11 +1,11 @@
-using AgendaContas.Data.Repositories;
+using AgendaContas.Domain.Interfaces;
 using AgendaContas.Domain.Models;
 
 namespace AgendaContas.UI.Forms;
 
 public class ContaForm : Form
 {
-    private readonly AppRepository _repo;
+    private readonly IAppRepository _repo;
     private readonly Conta? _contaAtual;
 
     private readonly TextBox _txtNome = new();
@@ -24,7 +24,7 @@ public class ContaForm : Form
 
     public Conta? ContaResult { get; private set; }
 
-    public ContaForm(AppRepository repo, Conta? conta = null)
+    public ContaForm(IAppRepository repo, Conta? conta = null)
     {
         _repo = repo;
         _contaAtual = conta;

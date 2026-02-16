@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using AgendaContas.Data.Repositories;
+using AgendaContas.Domain.Interfaces;
 using AgendaContas.Domain.Models;
 using AgendaContas.Domain.Services;
 using AgendaContas.UI.Services;
@@ -9,10 +10,13 @@ namespace AgendaContas.UI.Forms;
 
 public partial class MainForm : Form
 {
-    private AppRepository? _repo;
+    private IAppRepository? _repo;
     private FinanceiroService? _service;
     private Usuario? _usuarioLogado;
     private bool _runtimeReady;
+    private bool _runtimeUiInitialized;
+    private bool _gridInteractionsConfigured;
+    private bool _keyboardShortcutsConfigured;
 
     private readonly ComboBox _cmbCompetencia = new();
     private readonly ComboBox _cmbStatus = new();
@@ -20,17 +24,14 @@ public partial class MainForm : Form
     private readonly TextBox _txtBusca = new();
     private readonly Button _btnAplicarFiltro = new();
     private readonly Button _btnLimparFiltro = new();
-    private readonly Button _btnEditarLancamento = new();
-    private readonly Button _btnExcluirLancamento = new();
     private readonly Button _btnSobreApp = new();
-    private readonly Button _btnAnexarComprovante = new();
-    private readonly Button _btnAbrirComprovante = new();
     private readonly Button _btnFecharCompetencia = new();
     private readonly Button _btnReabrirCompetencia = new();
     private readonly Button _btnBackup = new();
     private readonly Button _btnRestore = new();
     private readonly Label _lblCompetenciaStatus = new();
     private readonly Label _lblUsuario = new();
+    private readonly Label _lblAtalhos = new();
 
     private bool IsAdmin =>
         _usuarioLogado == null || _usuarioLogado.IsAdmin;
@@ -41,18 +42,18 @@ public partial class MainForm : Form
         ConfigureRuntimeDependencies(null, null);
     }
 
-    public MainForm(AppRepository repository)
+    public MainForm(IAppRepository repository)
         : this(repository, null)
     {
     }
 
-    public MainForm(AppRepository repository, Usuario? usuarioLogado)
+    public MainForm(IAppRepository repository, Usuario? usuarioLogado)
     {
         InitializeComponent();
         ConfigureRuntimeDependencies(repository, usuarioLogado);
     }
 
-    private void ConfigureRuntimeDependencies(AppRepository? repository, Usuario? usuarioLogado)
+    private void ConfigureRuntimeDependencies(IAppRepository? repository, Usuario? usuarioLogado)
     {
         _usuarioLogado = usuarioLogado;
 
@@ -116,13 +117,20 @@ public partial class MainForm : Form
 
     private void InitializeRuntimeControls()
     {
+        if (_runtimeUiInitialized)
+        {
+            return;
+        }
+
         var usuarioLabel = _usuarioLogado?.Nome ?? "Administrador";
         Text = $"DDS - Cofre Real - Dashboard ({usuarioLabel})";
 
         ConfigureBottomPanelLayout();
         ConfigureFilterControls();
         ConfigureGridInteractions();
+        ConfigureKeyboardShortcuts();
         ApplyRolePermissions();
+        _runtimeUiInitialized = true;
     }
 
     private void ConfigureBottomPanelLayout()
@@ -142,28 +150,12 @@ public partial class MainForm : Form
         btnInformacoes.SetBounds(360, 112, 86, 30);
 
         _btnSobreApp.Text = "Sobre App";
-        _btnSobreApp.SetBounds(450, 112, 80, 30);
+        _btnSobreApp.SetBounds(454, 112, 86, 30);
         _btnSobreApp.Click += (_, _) =>
         {
             using var info = new InfoForm(_repo);
             info.ShowDialog(this);
         };
-
-        _btnEditarLancamento.Text = "Editar Lanç.";
-        _btnEditarLancamento.SetBounds(534, 112, 78, 30);
-        _btnEditarLancamento.Click += async (_, _) => await EditarLancamentoSelecionadoAsync();
-
-        _btnExcluirLancamento.Text = "Excluir Lanç.";
-        _btnExcluirLancamento.SetBounds(616, 112, 78, 30);
-        _btnExcluirLancamento.Click += async (_, _) => await ExcluirLancamentoSelecionadoAsync();
-
-        _btnAnexarComprovante.Text = "Anexar";
-        _btnAnexarComprovante.SetBounds(698, 112, 92, 30);
-        _btnAnexarComprovante.Click += async (_, _) => await AnexarComprovanteSelecionadoAsync();
-
-        _btnAbrirComprovante.Text = "Abrir Anexo";
-        _btnAbrirComprovante.SetBounds(794, 112, 92, 30);
-        _btnAbrirComprovante.Click += (_, _) => AbrirComprovanteSelecionado();
 
         _lblCompetenciaStatus.AutoSize = true;
         _lblCompetenciaStatus.SetBounds(12, 46, 300, 15);
@@ -174,6 +166,10 @@ public partial class MainForm : Form
         _lblUsuario.AutoSize = true;
         _lblUsuario.SetBounds(12, 66, 400, 15);
         _lblUsuario.Text = $"Usuário: {login} | Perfil: {perfil}";
+
+        _lblAtalhos.AutoSize = true;
+        _lblAtalhos.SetBounds(12, 88, 780, 15);
+        _lblAtalhos.Text = "Atalhos: F2 Editar | Del Excluir | Ctrl+Shift+N Novo Lanç. | Ctrl+Shift+P Marcar Pago | Ctrl+Shift+E Exportar";
 
         _btnFecharCompetencia.Text = "Fechar Mês";
         _btnFecharCompetencia.SetBounds(320, 40, 95, 26);
@@ -191,13 +187,10 @@ public partial class MainForm : Form
         _btnRestore.SetBounds(834, 40, 76, 26);
         _btnRestore.Click += async (_, _) => await RestoreDatabaseAsync();
 
-        pnlButtons.Controls.Add(_btnEditarLancamento);
-        pnlButtons.Controls.Add(_btnExcluirLancamento);
         pnlButtons.Controls.Add(_btnSobreApp);
-        pnlButtons.Controls.Add(_btnAnexarComprovante);
-        pnlButtons.Controls.Add(_btnAbrirComprovante);
         pnlButtons.Controls.Add(_lblCompetenciaStatus);
         pnlButtons.Controls.Add(_lblUsuario);
+        pnlButtons.Controls.Add(_lblAtalhos);
         pnlButtons.Controls.Add(_btnFecharCompetencia);
         pnlButtons.Controls.Add(_btnReabrirCompetencia);
         pnlButtons.Controls.Add(_btnBackup);
@@ -279,15 +272,117 @@ public partial class MainForm : Form
 
     private void ConfigureGridInteractions()
     {
+        if (_gridInteractionsConfigured)
+        {
+            return;
+        }
+
         dgvLancamentos.CellDoubleClick += async (_, _) => await EditarLancamentoSelecionadoAsync();
 
         var menu = new ContextMenuStrip();
-        menu.Items.Add("Editar lançamento", null, async (_, _) => await EditarLancamentoSelecionadoAsync());
-        menu.Items.Add("Excluir lançamento", null, async (_, _) => await ExcluirLancamentoSelecionadoAsync());
-        menu.Items.Add("Anexar comprovante", null, async (_, _) => await AnexarComprovanteSelecionadoAsync());
-        menu.Items.Add("Abrir comprovante", null, (_, _) => AbrirComprovanteSelecionado());
-        menu.Items.Add("Remover comprovante", null, async (_, _) => await RemoverComprovanteSelecionadoAsync());
+        menu.Items.Add(new ToolStripMenuItem("Editar lançamento", null, async (_, _) => await EditarLancamentoSelecionadoAsync())
+        {
+            ShortcutKeyDisplayString = "F2"
+        });
+        menu.Items.Add(new ToolStripMenuItem("Excluir lançamento", null, async (_, _) => await ExcluirLancamentoSelecionadoAsync())
+        {
+            ShortcutKeyDisplayString = "Del"
+        });
+        menu.Items.Add(new ToolStripSeparator());
+        menu.Items.Add(new ToolStripMenuItem("Anexar comprovante", null, async (_, _) => await AnexarComprovanteSelecionadoAsync())
+        {
+            ShortcutKeyDisplayString = "Ctrl+Shift+A"
+        });
+        menu.Items.Add(new ToolStripMenuItem("Abrir comprovante", null, (_, _) => AbrirComprovanteSelecionado())
+        {
+            ShortcutKeyDisplayString = "Ctrl+Shift+O"
+        });
+        menu.Items.Add(new ToolStripMenuItem("Remover comprovante", null, async (_, _) => await RemoverComprovanteSelecionadoAsync())
+        {
+            ShortcutKeyDisplayString = "Ctrl+Shift+R"
+        });
         dgvLancamentos.ContextMenuStrip = menu;
+        _gridInteractionsConfigured = true;
+    }
+
+    private void ConfigureKeyboardShortcuts()
+    {
+        if (_keyboardShortcutsConfigured)
+        {
+            return;
+        }
+
+        KeyPreview = true;
+        KeyDown += MainForm_KeyDown;
+        _keyboardShortcutsConfigured = true;
+    }
+
+    private async void MainForm_KeyDown(object? sender, KeyEventArgs e)
+    {
+        var gridFocused = dgvLancamentos.Focused || dgvLancamentos.ContainsFocus;
+
+        if (e.KeyCode == Keys.F2 && gridFocused)
+        {
+            e.Handled = true;
+            e.SuppressKeyPress = true;
+            await EditarLancamentoSelecionadoAsync();
+            return;
+        }
+
+        if (e.KeyCode == Keys.Delete && gridFocused)
+        {
+            e.Handled = true;
+            e.SuppressKeyPress = true;
+            await ExcluirLancamentoSelecionadoAsync();
+            return;
+        }
+
+        if (e.Control && e.Shift && e.KeyCode == Keys.A && gridFocused)
+        {
+            e.Handled = true;
+            e.SuppressKeyPress = true;
+            await AnexarComprovanteSelecionadoAsync();
+            return;
+        }
+
+        if (e.Control && e.Shift && e.KeyCode == Keys.O && gridFocused)
+        {
+            e.Handled = true;
+            e.SuppressKeyPress = true;
+            AbrirComprovanteSelecionado();
+            return;
+        }
+
+        if (e.Control && e.Shift && e.KeyCode == Keys.R && gridFocused)
+        {
+            e.Handled = true;
+            e.SuppressKeyPress = true;
+            await RemoverComprovanteSelecionadoAsync();
+            return;
+        }
+
+        if (e.Control && e.Shift && e.KeyCode == Keys.N)
+        {
+            e.Handled = true;
+            e.SuppressKeyPress = true;
+            btnAnexo.PerformClick();
+            return;
+        }
+
+        if (e.Control && e.Shift && e.KeyCode == Keys.P)
+        {
+            e.Handled = true;
+            e.SuppressKeyPress = true;
+            btnPagar.PerformClick();
+            return;
+        }
+
+        if (e.Control && e.Shift && e.KeyCode == Keys.E)
+        {
+            e.Handled = true;
+            e.SuppressKeyPress = true;
+            btnExportar.PerformClick();
+        }
     }
 
     private void ApplyRolePermissions()
@@ -299,7 +394,6 @@ public partial class MainForm : Form
 
         btnNovaConta.Enabled = false;
         btnInformacoes.Enabled = false;
-        _btnExcluirLancamento.Enabled = false;
         _btnFecharCompetencia.Enabled = false;
         _btnReabrirCompetencia.Enabled = false;
         _btnBackup.Enabled = false;

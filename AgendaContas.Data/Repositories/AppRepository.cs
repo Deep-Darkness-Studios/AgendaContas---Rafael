@@ -9,7 +9,7 @@ using Microsoft.Data.Sqlite;
 
 namespace AgendaContas.Data.Repositories;
 
-public class AppRepository : IContaRepository, ILancamentoRepository, ICategoriaRepository, IUsuarioRepository, IAuditoriaRepository, IParticipanteStrRepository
+public class AppRepository : IAppRepository
 {
     private const string ParticipantesStrCsvUrl = "https://www.bcb.gov.br/content/estabilidadefinanceira/str1/ParticipantesSTR.csv";
     private const string IntegracaoParticipantesStrKey = "BCB_PARTICIPANTES_STR";
